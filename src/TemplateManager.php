@@ -28,53 +28,33 @@ class TemplateManager
             $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
             $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
 
-            if (strpos($text, '[quote:summary_html]') !== false) {
-                $text = str_replace(
-                    '[quote:summary_html]',
-                    Quote::renderHtml($_quoteFromRepository),
-                    $text
-                );
-            }
+            $text = replace($text, 'quote', 'summary_html', Quote::renderHtml($_quoteFromRepository));
 
-            if (strpos($text, '[quote:summary]') !== false) {
-                $text = str_replace(
-                    '[quote:summary]',
-                    Quote::renderText($_quoteFromRepository),
-                    $text
-                );
-            }
+            $text = replace($text, 'quote', 'summary', Quote::renderText($_quoteFromRepository));
 
-            if (strpos($text, '[quote:destination_name]') !== false) {
-                $text = str_replace(
-                    '[quote:destination_name]',
-                    $destinationOfQuote->countryName,
-                    $text
-                );
-            } 
-            
-            if(strpos($text, '[quote:destination_link]') !== false) {
-                $text = str_replace(
-                    '[quote:destination_link]',
-                    $usefulObject->url . '/' . $destinationOfQuote->countryName . '/quote/' . $_quoteFromRepository->id,
-                    $text
-                );
-            else {
-                $text = str_replace(
-                    '[quote:destination_link]',
-                    '',
-                    $text
-                );
-            }
+            $text = replace($text, 'quote', 'destination_name', $destinationOfQuote->countryName);
+
+            $text = replace($text, 'quote', 'destination_link', $usefulObject->url . '/' . $destinationOfQuote->countryName . '/quote/' . $_quoteFromRepository->id);
         }       
     
-        if(strpos($text, '[user:first_name]') !== false) {
-            $text = str_replace(
-                '[user:first_name]',
-                ucfirst(mb_strtolower($_user->firstname)),
-                $text
-            );
-        } 
+        $text = replace($text, 'user', 'first_name', ucfirst(mb_strtolower($_user->firstname)));
 
         return $text;
     }
+
+    private function replace($text, $concern, $field, $newText) 
+    {
+        $oldText = '['.$concern.':'.$field.']';
+
+        if(strpos($text, $oldText) !== false) {
+            $text = str_replace(
+                $oldText,
+                $newText,
+                $text
+            );
+        }
+
+        return $text;
+    }
+
 }
