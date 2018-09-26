@@ -42,6 +42,16 @@ class TemplateManager
         return $text;
     }
 
+    /**
+     * Complete a field in the text of the template by the wanted data
+     * 
+     * @param  [string] $text    [the text from the template]
+     * @param  [string] $concern [quote or user]
+     * @param  [string] $field   [the field to complete]
+     * @param  [string] $newText [the text to put in the field]
+     * 
+     * @return [string] $text    [the text with the field completed]
+     */
     private function replace($text, $concern, $field, $newText) 
     {
         $oldText = '['.$concern.':'.$field.']';
