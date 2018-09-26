@@ -1,0 +1,28 @@
+Dans le cadre de ce re-factoring j'ai appliqué plusieurs principes :
+
+- suppression de la logique inutile, 
+	par exemple dans le cas de summary et summary_html, l'existence de ces champs était testée 2 fois, la première avec un ou
+	puis chacune individuellement.
+
+- suppression de la redondance,
+	par exemple ne plus créer une variable destination identique à la variable destinationOfQuote.
+
+- suppression des tests inutiles,
+	par exemple, isset($_user) ou isset($destination) qui, de part la construction des fonctions getInstance() et getCurrentUser()
+	qui impossible la mise à null des variables $destination et $_user, revient à tester la présence des champs concernés dans le texte.
+
+- suppression des cas inutiles,
+	par exemple le else de destination_link qui est parcouru si ce champ n'existe pas et donc ne changera pas le texte avec sa tentative de remplacement.
+
+- homogénéisation du code pour une lecture plus simple,
+	au lieu de garder les 3 schémas : définition d'une variable avec strpos puis test de l'existence de celle-ci, test avec strpos directement dans le if ou écriture avec le and, j'ai décidé de garder la seconde solution qui me parait à la fois plus lisible que celle avec and et plus rapide à écrire que celle avec définition préalable de variable.
+
+- factorisation des blocs - tests if(strpos), utilisation de la fonction str_replace - en une fonction replace
+	cela permet d'assainir encore la fonction computeText en la rendant plus lisible et plus simple à faire évoluer (une ligne suffira pour ajouter la complétion d'un nouveau champ).
+
+- utilisation de commentaire 
+	afin de décrire le fonctionnement de la nouvelle fonction et permettre à n'importe qui de l'utiliser facilement.
+
+- respect des normes PSR
+	par exemple sur le nom des variables ($_user devient $user), la taille des lignes ou la place des accolades dans les blocs if.
+	Ceci encore une fois afin de faciliter la prise en main et la lecture de cette fonction.
