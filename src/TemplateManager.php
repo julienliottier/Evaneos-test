@@ -27,17 +27,14 @@ class TemplateManager
             $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
             $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
 
-            $containsSummaryHtml = strpos($text, '[quote:summary_html]');
-            $containsSummary     = strpos($text, '[quote:summary]');
-
-            if ($containsSummaryHtml !== false) {
+            if (strpos($text, '[quote:summary_html]') !== false) {
                 $text = str_replace(
                     '[quote:summary_html]',
                     Quote::renderHtml($_quoteFromRepository),
                     $text
                 );
             }
-            if ($containsSummary !== false) {
+            if (strpos($text, '[quote:summary]') !== false) {
                 $text = str_replace(
                     '[quote:summary]',
                     Quote::renderText($_quoteFromRepository),
@@ -45,13 +42,28 @@ class TemplateManager
                 );
             }
 
-            (strpos($text, '[quote:destination_name]') !== false) and $text = str_replace('[quote:destination_name]',$destinationOfQuote->countryName,$text);
-        }
+            if (strpos($text, '[quote:destination_name]') !== false) {
+                $text = str_replace(
+                    '[quote:destination_name]',
+                    $destinationOfQuote->countryName,
+                    $text
+                );
+            } 
 
-        if(strpos($text, '[quote:destination_link]') !== false){
-            $text = str_replace('[quote:destination_link]', $usefulObject->url . '/' . $destinationOfQuote->countryName . '/quote/' . $_quoteFromRepository->id, $text);
-        else
-            $text = str_replace('[quote:destination_link]', '', $text);
+            if(strpos($text, '[quote:destination_link]') !== false) {
+                $text = str_replace(
+                    '[quote:destination_link]',
+                    $usefulObject->url . '/' . $destinationOfQuote->countryName . '/quote/' . $_quoteFromRepository->id,
+                    $text
+                );
+            else {
+                $text = str_replace(
+                    '[quote:destination_link]',
+                    '',
+                    $text
+                );
+            }
+        }       
 
         /*
          * USER
