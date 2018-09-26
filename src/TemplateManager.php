@@ -20,6 +20,7 @@ class TemplateManager
         $APPLICATION_CONTEXT = ApplicationContext::getInstance();
 
         $quote = (isset($data['quote']) and $data['quote'] instanceof Quote) ? $data['quote'] : null;
+        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
 
         if ($quote)
         {
@@ -34,6 +35,7 @@ class TemplateManager
                     $text
                 );
             }
+
             if (strpos($text, '[quote:summary]') !== false) {
                 $text = str_replace(
                     '[quote:summary]',
@@ -49,7 +51,7 @@ class TemplateManager
                     $text
                 );
             } 
-
+            
             if(strpos($text, '[quote:destination_link]') !== false) {
                 $text = str_replace(
                     '[quote:destination_link]',
@@ -64,15 +66,14 @@ class TemplateManager
                 );
             }
         }       
-
-        /*
-         * USER
-         * [user:*]
-         */
-        $_user  = (isset($data['user'])  and ($data['user']  instanceof User))  ? $data['user']  : $APPLICATION_CONTEXT->getCurrentUser();
-        if($_user) {
-            (strpos($text, '[user:first_name]') !== false) and $text = str_replace('[user:first_name]'       , ucfirst(mb_strtolower($_user->firstname)), $text);
-        }
+    
+        if(strpos($text, '[user:first_name]') !== false) {
+            $text = str_replace(
+                '[user:first_name]',
+                ucfirst(mb_strtolower($_user->firstname)),
+                $text
+            );
+        } 
 
         return $text;
     }
