@@ -24,8 +24,7 @@ class TemplateManager
                  ? $data['user']
                  : $APPLICATION_CONTEXT->getCurrentUser();
 
-        if ($quote)
-        {
+        if ($quote) {
             $quoteFromRepository = QuoteRepository::getInstance()->getById($quote->id);
             $usefulObject = SiteRepository::getInstance()->getById($quote->siteId);
             $destinationOfQuote = DestinationRepository::getInstance()->getById($quote->destinationId);
